@@ -17,32 +17,6 @@ const app = new OpenAPIHono<{ Bindings: Bindings }>();
 
 const user = userSchema;
 
-//not working middleware
-app.use(
-  "/fp/*",
-  createMiddleware({
-    // @ts-expect-error - The imported spec does not match our expected OpenAPIv3 type
-    spec: app.getOpenAPIDocument({
-      openapi: "3.0.0",
-      info: {
-        title: "My Hono OpenAPI API",
-        version: "0.0.1",
-        description: "API documentation for my hono api",
-      },
-      servers: [
-      ],
-    }),
-  }),
-);
-
-// working middleware
-// app.use(
-//   "/fp/*",
-//   createMiddleware({
-//     spec: "/doc",
-//   }),
-// );
-
 
 app.get("/", (c) => {
   return c.text("Honc! 🪿");
@@ -81,5 +55,23 @@ app.doc('/doc', {
     title: 'My API',
   },
 })
+
+//add Fiberplane middleware
+app.use(
+  "/fp/*",
+  createMiddleware({
+    // @ts-expect-error - The imported spec does not match our expected OpenAPIv3 type
+    spec: app.getOpenAPIDocument({
+      openapi: "3.0.0",
+      info: {
+        title: "My Hono OpenAPI API",
+        version: "0.0.1",
+        description: "API documentation for my hono api",
+      },
+      servers: [
+      ],
+    }),
+  }),
+);
 
 export default instrument(app);
